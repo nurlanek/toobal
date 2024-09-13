@@ -11,8 +11,22 @@ class Dolboor(models.Model):
     maksathtalgan_auditoriya = models.CharField(max_length=255, verbose_name='Максатталган аудитория')
     dolboordun_byudzheti = models.DecimalField(max_digits=20, decimal_places=2, verbose_name='Долбоордун бюджети')
     onoktoshtorunuz_maalymat = models.TextField(verbose_name='Өнөктөштөрүңүз маалымат')
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
 
     def __str__(self): return self.dolboordun_atalyshy
+
+class Project_confirmation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='project_confirmation_user', verbose_name='Кайрылуучу')
+    applicant_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='project_confirmation_confirmer',
+                             verbose_name='Тастыктоочу')
+    dolboor = models.ForeignKey(Dolboor, on_delete=models.CASCADE, verbose_name="Долбоор")
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
+    confirmation = models.BooleanField(default=False, verbose_name='Макулдук')
+    comment = models.CharField(max_length=255, verbose_name='Коментарий')
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
+
+    def __str__(self):
+        return f"{self.user} - {self.dolboor.dolboordun_atalyshy}"
 
 class Negizgimaalymat(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='negizgimaalymat', verbose_name='User')

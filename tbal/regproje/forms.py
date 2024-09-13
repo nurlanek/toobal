@@ -1,6 +1,6 @@
 from django import forms
 from .models import (Dolboor, Negizgimaalymat, Kenenmaalymat, Iskeashyruuplany,
-                     Dolboordundudjeti, Dolboordunkomandasy, Baaloo_turuktuuluk, Tirkemeler)
+                     Dolboordundudjeti, Dolboordunkomandasy, Baaloo_turuktuuluk, Tirkemeler, Project_confirmation)
 
 class DolboorForm(forms.ModelForm):
     class Meta:
@@ -194,12 +194,22 @@ class TirkemelerForm(forms.ModelForm):
         model = Tirkemeler
         fields = ['dolboor', 'name', 'file']
         labels = {
-            'dolboor': 'Долбоор',
-            'name': 'Комментарий',
-            'file': 'файлды жүктөө'
+            'dolboor': 'Долбоор:',
+            'name': 'Документтин аты:',
+            'file': 'Документти жүктөө:'
         }
         widgets = {
             'dolboor': forms.Select(attrs={'class': 'form-control'}),
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Dosya ismi'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Документтин атын жазыңыз'}),
             'file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+
+class ProjectConfirmationForm(forms.ModelForm):
+    class Meta:
+        model = Project_confirmation
+        fields = ['confirmation', 'comment']
+        widgets = {
+            'comment': forms.TextInput(attrs={'id': 'comment', 'required': True}),
+            'confirmation': forms.CheckboxInput(attrs={'id': 'approval', 'required': True}),
         }

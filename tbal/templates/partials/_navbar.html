@@ -11,7 +11,7 @@
         <div class="collapse navbar-collapse" id="navbar">
 
         <ul class="navbar-nav me-auto">
-                <a class="nav-link" href="">Home</a>
+                <a class="nav-link" href="">Башкы бет</a>
             </li>
             <li class="nav-item dropdown">
                 <div class="dropdown">
@@ -24,7 +24,7 @@
             </li>
             <li class="nav-item dropdown">
                 <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Операция</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Тема</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="">Tema 3</a></li>
                         <li><a class="dropdown-item" href="">Tema 4</a></li>
@@ -42,20 +42,20 @@
         <ul class="navbar-nav ms-auto">
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="">Личный кабинет</a>
+                    <a class="nav-link" href="">Өздүк кабинет</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account:logout' %}">Выход</a>
+                    <a class="nav-link" href="{% url 'account:logout' %}">Чыгуу</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Привет,{{ user.username }} </a>
+                    <a class="nav-link" href="">Салам, {{ user.username }} </a>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account:login' %}">Вход</a>
+                    <a class="nav-link" href="{% url 'account:login' %}">Кирүү</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account:register' %}">Регистрация</a>
+                    <a class="nav-link" href="{% url 'account:register' %}">Катталуу</a>
                 </li>
             {% endif %}
         </ul>

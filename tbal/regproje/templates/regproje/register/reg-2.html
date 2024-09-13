@@ -63,7 +63,7 @@
 
 
 {% if dolboor_list %}
-    <h3>Долбоорлор</h3>
+    <h3>Сакталган долбоор</h3>
     <ul>
         {% for dolboor in dolboor_list %}
         <li>
@@ -74,7 +74,7 @@
         {% endfor %}
     </ul>
 {% else %}
-    <p>Азырынча эч кандай Долбоор катталган эмес. <a href="{% url 'regproje:dolboor_create' %}">Жаңы Долбоор түзүңүз.</a></p>
+    <p>Азырынча эч кандай долбоор катталган эмес. <a href="{% url 'regproje:dolboor_create' %}">Жаңы Долбоор түзүңүз.</a></p>
 
 {% endif %}
 

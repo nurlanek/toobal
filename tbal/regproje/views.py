@@ -1,15 +1,60 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import (Dolboor, Negizgimaalymat, Kenenmaalymat, Iskeashyruuplany,
+from .models import (Dolboor, Negizgimaalymat, Kenenmaalymat, Iskeashyruuplany, Project_confirmation,
                      Dolboordundudjeti, Dolboordunkomandasy, Baaloo_turuktuuluk,Tirkemeler)
 from .forms import (DolboorForm, NegizgimaalymatForm, KenenmaalymatForm, TirkemelerForm,
-                    IskeAshyruUplanyForm, DolboordundudjetiForm, DolboordunkomandasyForm, BaalooTuruktuulukForm)
+                    IskeAshyruUplanyForm, DolboordundudjetiForm, DolboordunkomandasyForm,
+                    ProjectConfirmationForm, BaalooTuruktuulukForm)
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
     if not request.user.is_authenticated:
         return redirect("account:login")
-    return render(request, "regproje/index.html")
+
+    # Kullanıcının tüm Dolboor kayıtlarını al
+    dolboors = Dolboor.objects.all()
+
+    dolboor_data = []
+    for dolboor in dolboors:
+        # Kullanıcının bu dolboor için olan son onayını al
+        last_confirmation = Project_confirmation.objects.filter(dolboor=dolboor, user=request.user).order_by('-created').first()
+        dolboor_data.append({
+            'dolboor': dolboor,
+            'last_confirmation': last_confirmation,
+        })
+
+    # Template'e verileri gönder
+    return render(request, "regproje/index.html", {'dolboor_data': dolboor_data})
+
+@login_required
+def approvers_menin_dolboorum(request, dolboor_id):
+    dolboor = get_object_or_404(Dolboor, id=dolboor_id)
+    user = dolboor.user
+
+    user_projects = Dolboor.objects.filter(user=user)
+    negizgimaalymat = Negizgimaalymat.objects.filter(user=user)
+    kenenmaalymat = Kenenmaalymat.objects.filter(user=user)
+    iskeashyruuplany = Iskeashyruuplany.objects.filter(user=user)
+    dolboordundudjeti = Dolboordundudjeti.objects.filter(user=user)
+    dolboordunkomandasy = Dolboordunkomandasy.objects.filter(user=user)
+    baaloo_turuktuuluk = Baaloo_turuktuuluk.objects.filter(user=user).first()
+    tirkemeler = Tirkemeler.objects.filter(user=user)
+
+    context = {
+        'dolboor': dolboor,
+        'user_projects': user_projects,
+        'negizgimaalymat': negizgimaalymat,
+        'kenenmaalymat': kenenmaalymat,
+        'iskeashyruuplany': iskeashyruuplany,
+        'dolboordundudjeti': dolboordundudjeti,
+        'dolboordunkomandasy': dolboordunkomandasy,
+        'baaloo_turuktuuluk': baaloo_turuktuuluk,
+        'tirkemeler': tirkemeler,
+    }
+
+    return render(request, "regproje/register/approvers_menin_dolboorum.html", context)
+
+
 
 def Menin_dolboorum(request):
     if not request.user.is_authenticated:
@@ -347,3 +392,33 @@ def menin_dolboorum(request):
         'tirkemeler_kayit_var': tirkemeler.exists()
     }
     return render(request, 'regproje/register/menin_dolboorum.html', context)
+
+
+@login_required
+def project_confirmation_view(request):
+    dolboors = Dolboor.objects.all()
+
+    if request.method == 'POST':
+        dolboor_id = request.POST.get('dolboor_id')
+        comment = request.POST.get('comment')
+        applicant_user_id = request.POST.get('applicant_user_id')
+        confirmation = 'confirmation' in request.POST
+
+        dolboor = get_object_or_404(Dolboor, id=dolboor_id)
+
+        # Eğer form gönderilmişse bir Project_confirmation kaydı oluşturuyoruz
+        Project_confirmation.objects.create(
+            user=request.user,
+            dolboor=dolboor,
+            comment=comment,
+            confirmation=confirmation,
+            applicant_user_id=applicant_user_id
+        )
+
+        return redirect('regproje:index')  # Aynı view'a yönlendirme
+
+    context = {
+        'dolboors': dolboors,
+    }
+
+    return render(request, 'regproje/register/index.html', context)

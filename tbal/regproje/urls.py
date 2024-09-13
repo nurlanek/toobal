@@ -9,6 +9,10 @@ urlpatterns = [
     #path("menin_dolboorum", views.Menin_dolboorum, name="menin_dolboorum"),
     path('menin_dolboorum/', menin_dolboorum, name='menin_dolboorum'),
 
+    path('approvers/menim-dolboorum/<int:dolboor_id>/', views.approvers_menin_dolboorum,
+         name='approvers_menin_dolboorum'),
+    path('confirm/', views.project_confirmation_view, name='project_confirmation'),
+
     path("Dolboordundudjeti", views.Dolboordundudjeti, name="Dolboordundudjeti"),
     path("Dolboordunkomandasy", views.Dolboordunkomandasy, name="Dolboordunkomandasy"),
     path("Baaloo_turuktuuluk", views.Baaloo_turuktuuluk, name="Baaloo_turuktuuluk"),
